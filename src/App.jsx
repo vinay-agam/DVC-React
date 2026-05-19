@@ -11,7 +11,7 @@ import { START_SCREEN } from './cardConfig';
  */
 
 // Path to your card image assets (relative to public/)
-const ASSETS_PATH = '/assets/images/';
+const ASSETS_PATH = `${import.meta.env.BASE_URL}assets/images/`;
 
 // Static card data for development / demo
 const STATIC_CARD_DATA = {
