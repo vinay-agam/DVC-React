@@ -78,15 +78,15 @@ html, body, #root {
 
 /* ── Button hover glow ───────────────────────────────── */
 .btn-glow {
-  transition: filter 0.2s ease, transform 0.2s ease;
+  transition: filter 0.2s ease, scale 0.2s ease;
   cursor: pointer;
 }
 
 .btn-glow:hover {
   filter: brightness(1.25) drop-shadow(0 0 8px rgba(15, 141, 200, 0.5));
-  transform: scale(1.04);
+  scale: 1.04;
 }
 
 .btn-glow:active {
-  transform: scale(0.97);
+  scale: 0.97;
 }

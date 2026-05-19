@@ -78,9 +78,9 @@ export function downloadVcf(cardData) {
   vcfLines.push('END:VCARD');
 
   const vcf = vcfLines.join('\r\n');
-  const blob = new Blob([vcf], { type: 'text/vcard;charset=utf-8;' });
+  const dataUri = 'data:text/vcard;charset=utf-8,' + encodeURIComponent(vcf);
   const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
+  link.href = dataUri;
   link.download = (name ? name.replace(/\s+/g, '_') : 'contact') + '.vcf';
   document.body.appendChild(link);
   link.click();
