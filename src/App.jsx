@@ -19,7 +19,7 @@ const STATIC_CARD_DATA = {
   user_name: 'Pradeep Prabhakar Kelkar',
   user_designation: 'Senior Vice President',
   department_name: 'Wealth Management',
-  email: 'pradeep.kelkar@kunvarji.com',
+  email: 'pradeep.kelkar@kunvarji.com sdkfjhajksdh fdskjhfkjsda jdafkhskjd dasfjkhdskjhfak',
   mobile_number: '+91 98765 43210',
   address: 'Kunvarji Wealth, Ahmedabad, Gujarat, India',
   company_name: 'Kunvarji Wealth',

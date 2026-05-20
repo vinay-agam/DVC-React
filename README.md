@@ -127,6 +127,24 @@ Put it in the `texts` array. Text can be static or dynamic (loaded from the API)
 }
 ```
 
+**Dynamic Multi-line Text with autoFit (e.g. Address):**
+```javascript
+{
+  id: 'address',
+  dataKey: 'address',
+  x: 164, 
+  y: 1375,
+  width: 750,       // Figma coordinates width limit (Enables auto word-wrapping)
+  height: 90,       // Figma coordinates height limit
+  fontSize: 30,     // Base designer font size
+  color: '#4886B1',
+  align: 'left',
+  anchorX: 0,
+  fontWeight: 400,
+  autoFit: true     // Automatically shrinks font size to fit inside 750x90px box
+}
+```
+
 ### 4. How to Add Buttons and Actions
 Put them in the `buttons` array.
 
@@ -170,6 +188,45 @@ Here are the built-in actions you can assign to any button or text element using
 - `openTwitter`
 
 *(Note: Actions are defined in `src/actions.js`)*
+
+---
+
+## 🎨 Advanced Styling & Interactivity Properties
+
+Any element configuration (text, image, button, social icon) in `cardConfig.js` can accept these optional, advanced properties to achieve high-end design styling and custom transitions.
+
+### 🌟 Common Properties (All Elements)
+| Property | Type | Description | Example |
+| :--- | :--- | :--- | :--- |
+| `rotation` | `Number` | Rotates the element (in degrees). | `rotation: -10` |
+| `scale` | `Number` | Adjusts the base scaling size of the element. | `scale: 1.05` |
+| `opacity` | `Number` | Set transparency factor (from `0` to `1`). | `opacity: 0.8` |
+| `zIndex` | `Number` | Overrides the element layering order. | `zIndex: 50` |
+| `borderRadius` | `String` | Rounded corners for elements or element containers. | `borderRadius: '16px'` |
+| `shadow` | `String` | Adds standard or custom CSS drop shadow. | `shadow: '0 8px 32px rgba(0,0,0,0.35)'` |
+| `border` | `String` | Adds a custom CSS border around the element. | `border: '2px solid #0f8dc8'` |
+| `backgroundColor` | `String` | Solid or semi-transparent background color. | `backgroundColor: '#00000050'` |
+| `padding` | `String` | CSS padding space inside the element container. | `padding: '10px 20px'` |
+| `filter` | `String` | Image/backdrop effects (e.g. brightness, blur). | `filter: 'brightness(1.1)'` |
+| `objectFit` | `String` | Resizing fit for images (`cover`, `contain`, `fill`). | `objectFit: 'cover'` |
+
+### 🖱️ Interactive Properties (Buttons & Socials)
+These control the springy interaction animations when hovering or tapping buttons:
+* `hoverScale` — Scale factor on mouse hover (e.g. `1.15`, defaults to `1.04`).
+* `activeScale` — Scale factor on mouse press click (e.g. `0.92`, defaults to `0.97`).
+
+### 🔤 Typographical Specials (Texts Only)
+Allows custom styling of typographic elements to match premium typography layout:
+* `width` — Bounding box width in Figma pixels. **Enables automatic word wrapping** (line breaks) when specified.
+* `height` — Bounding box height limit in Figma pixels (used for height restrictions & auto-scaling).
+* `align` — Text horizontal alignment override (`"left"`, `"center"`, `"right"`).
+* `autoFit` — Boolean. If `true`, **dynamically shrinks the font size** to fit perfectly inside the designated `width` and `height` boundary box based on word/character volume.
+* `fontFamily` — Typography family name override (e.g. `"'Outfit', sans-serif"`).
+* `letterSpacing` — Character spacing tracking (e.g. `"-0.02em"` or `"0.05em"`).
+* `whiteSpace` — Control text wrapping rules (`"nowrap"`, `"normal"`, `"pre-line"`).
+* `lineHeight` — Adjust vertical height multiplier (e.g. `1.4`).
+* `textTransform` — Text case converter (`"uppercase"`, `"capitalize"`, `"lowercase"`).
+* `fontStyle` — Apply slanted posture style (`"italic"`).
 
 ---
 

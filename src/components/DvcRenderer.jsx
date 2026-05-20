@@ -57,10 +57,69 @@ export default function DvcRenderer({ cardData, assetsPath, currentPage, setCurr
   };
 
   /**
+   * Get a dynamic font size, supporting automatic bounding-box scaling (autoFit).
+   */
+  const getDynamicFontSize = (txt, content) => {
+    let baseSize = txt.fontSize;
+
+    if (txt.autoFit && txt.width && txt.height) {
+      const L = (content || '').length || 1;
+      const W = txt.width;
+      const H = txt.height;
+
+      // Estimate longest word length to ensure single words don't overflow horizontally
+      const words = (content || '').split(/\s+/);
+      const longestWordLength = Math.max(...words.map(w => w.length), 1);
+
+      // 1. Scale down based on character volume inside W x H box
+      // Target area: W * H. Area taken by one char: charWidth * charHeight ≈ (F * 0.52) * (F * 1.25) = F^2 * 0.65
+      // So L * F^2 * 0.65 <= W * H  =>  F <= Math.sqrt((W * H) / (L * 0.65))
+      const volumeF = Math.sqrt((W * H) / (L * 0.65));
+
+      // 2. Ensure font height is not taller than container height
+      const heightF = H / 1.15;
+
+      // 3. Ensure longest word fits horizontally
+      const wordF = W / (longestWordLength * 0.52);
+
+      // Limit to base size (never scale up, only down)
+      baseSize = Math.min(baseSize, volumeF, heightF, wordF);
+    } else {
+      // Fallback to tiered font sizing if autoFit is not enabled
+      return getTieredFontCqw(txt.fontSize, content);
+    }
+
+    return fontCqw(baseSize);
+  };
+
+  /**
    * Convert a Figma pixel dimension to cqw (container query width units).
    * This keeps elements proportional to the card container width.
    */
   const sizeCqw = (px) => (px / REFERENCE_FRAME.width) * 100;
+
+  /**
+   * Helper to build style objects with advanced custom properties
+   */
+  const getAdvancedStyles = (item) => {
+    const styles = {};
+
+    if (item.opacity !== undefined) styles.opacity = item.opacity;
+    if (item.zIndex !== undefined) styles.zIndex = item.zIndex;
+    if (item.borderRadius !== undefined) styles.borderRadius = item.borderRadius;
+    if (item.shadow !== undefined) styles.boxShadow = item.shadow;
+    if (item.border !== undefined) styles.border = item.border;
+    if (item.backgroundColor !== undefined) styles.backgroundColor = item.backgroundColor;
+    if (item.padding !== undefined) styles.padding = item.padding;
+    if (item.filter !== undefined) styles.filter = item.filter;
+    if (item.objectFit !== undefined) styles.objectFit = item.objectFit;
+
+    // CSS variables for interactive components custom hover scales
+    if (item.hoverScale !== undefined) styles['--hover-scale'] = item.hoverScale;
+    if (item.activeScale !== undefined) styles['--active-scale'] = item.activeScale;
+
+    return styles;
+  };
 
   if (!screen) return null;
 
@@ -109,7 +168,8 @@ export default function DvcRenderer({ cardData, assetsPath, currentPage, setCurr
                   top: `${yPct(img.y)}%`,
                   ...(img.width && { width: `${sizeCqw(img.width)}cqw` }),
                   ...(img.height && { height: `${sizeCqw(img.height)}cqw` }),
-                  transform: `translate(${-(img.anchorX || 0) * 100}%, ${-(img.anchorY || 0) * 100}%)`,
+                  transform: `translate(${-(img.anchorX || 0) * 100}%, ${-(img.anchorY || 0) * 100}%) rotate(${img.rotation || 0}deg) scale(${img.scale || 1})`,
+                  ...getAdvancedStyles(img),
                 }}
               />
             );
@@ -120,7 +180,7 @@ export default function DvcRenderer({ cardData, assetsPath, currentPage, setCurr
             const content = resolveText(txt);
             if (!content) return null;
 
-            const responsiveFontSize = getTieredFontCqw(txt.fontSize, content);
+            const responsiveFontSize = getDynamicFontSize(txt, content);
             const isClickable = !!txt.action;
             const isCentered = txt.anchorX === 0.5;
 
@@ -136,7 +196,9 @@ export default function DvcRenderer({ cardData, assetsPath, currentPage, setCurr
               : {
                   left: `${xPct(txt.x)}%`,
                   top: `${yPct(txt.y)}%`,
-                  maxWidth: '60%',
+                  ...(txt.width ? { width: `${sizeCqw(txt.width)}cqw` } : { maxWidth: '60%' }),
+                  ...(txt.height && { height: `${sizeCqw(txt.height)}cqw` }),
+                  ...(txt.align && { textAlign: txt.align }),
                 };
 
             return (
@@ -149,11 +211,17 @@ export default function DvcRenderer({ cardData, assetsPath, currentPage, setCurr
                   fontSize: `${responsiveFontSize}cqw`,
                   color: txt.color,
                   fontWeight: txt.fontWeight || 400,
-                  fontFamily: "'Inter', system-ui, sans-serif",
-                  letterSpacing: '-0.01em',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
+                  fontFamily: txt.fontFamily || "'Inter', system-ui, sans-serif",
+                  letterSpacing: txt.letterSpacing || '-0.01em',
+                  whiteSpace: txt.whiteSpace || (txt.width ? 'normal' : 'nowrap'),
+                  overflow: txt.overflow || (txt.width || txt.height ? 'hidden' : 'hidden'),
+                  textOverflow: txt.textOverflow || (txt.width ? 'clip' : 'ellipsis'),
+                  wordBreak: txt.width ? 'break-word' : undefined,
+                  transform: `rotate(${txt.rotation || 0}deg) scale(${txt.scale || 1})`,
+                  ...(txt.lineHeight !== undefined && { lineHeight: txt.lineHeight }),
+                  ...(txt.fontStyle !== undefined && { fontStyle: txt.fontStyle }),
+                  ...(txt.textTransform !== undefined && { textTransform: txt.textTransform }),
+                  ...getAdvancedStyles(txt),
                 }}
                 onClick={isClickable ? () => handleAction(txt) : undefined}
               >
@@ -171,7 +239,9 @@ export default function DvcRenderer({ cardData, assetsPath, currentPage, setCurr
               style={{
                 left: `${xPct(btn.x)}%`,
                 top: `${yPct(btn.y)}%`,
-                transform: `translate(${-(btn.anchorX || 0) * 100}%, ${-(btn.anchorY || 0) * 100}%)`,
+                transform: `translate(${-(btn.anchorX || 0) * 100}%, ${-(btn.anchorY || 0) * 100}%) rotate(${btn.rotation || 0}deg) scale(${btn.scale || 1})`,
+                overflow: btn.borderRadius ? 'hidden' : undefined,
+                ...getAdvancedStyles(btn),
               }}
               onClick={() => handleAction(btn)}
               aria-label={btn.id.replace(/_/g, ' ')}
@@ -183,6 +253,7 @@ export default function DvcRenderer({ cardData, assetsPath, currentPage, setCurr
                 className="max-w-none"
                 style={{
                   width: `${sizeCqw(btn.width || 380)}cqw`,
+                  ...(btn.borderRadius && { borderRadius: btn.borderRadius }),
                 }}
               />
             </button>
@@ -208,6 +279,9 @@ export default function DvcRenderer({ cardData, assetsPath, currentPage, setCurr
                 style={{
                   left: `${xPct(social.x)}%`,
                   top: `${yPct(social.y)}%`,
+                  transform: `rotate(${social.rotation || 0}deg) scale(${social.scale || 1})`,
+                  overflow: social.borderRadius ? 'hidden' : undefined,
+                  ...getAdvancedStyles(social),
                 }}
                 onClick={hasLink ? () => handleAction(social) : undefined}
                 disabled={!hasLink}
@@ -220,6 +294,7 @@ export default function DvcRenderer({ cardData, assetsPath, currentPage, setCurr
                   className="max-w-none"
                   style={{
                     width: `${sizeCqw(social.width || 140)}cqw`,
+                    ...(social.borderRadius && { borderRadius: social.borderRadius }),
                   }}
                 />
               </button>
