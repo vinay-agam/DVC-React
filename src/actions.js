@@ -5,6 +5,23 @@
  * Ported from game.js — each function is self-contained.
  */
 
+// ── PWA Install Prompt Capture ──────────────────────────
+let deferredInstallPrompt = null;
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the default mini-infobar from appearing
+    e.preventDefault();
+    // Stash the event so it can be triggered later
+    deferredInstallPrompt = e;
+  });
+
+  // Clear the prompt reference once the app is installed
+  window.addEventListener('appinstalled', () => {
+    deferredInstallPrompt = null;
+  });
+}
+
 /**
  * Generate and download a VCF contact file.
  */
@@ -212,6 +229,37 @@ export function openTwitter(cardData) {
 }
 
 /**
+ * Trigger the Add to Home Screen / PWA install prompt.
+ * Falls back to instructions for browsers that don't support beforeinstallprompt (e.g. iOS Safari).
+ */
+export function installApp() {
+  if (deferredInstallPrompt) {
+    // Show the browser's native install prompt
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      }
+      deferredInstallPrompt = null;
+    });
+  } else {
+    // Fallback for iOS Safari and browsers without beforeinstallprompt
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+
+    if (isStandalone) {
+      alert('This app is already installed on your device!');
+    } else if (isIOS || isSafari) {
+      alert('To install this app:\n\n1. Tap the Share button (↑) in Safari\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm');
+    } else {
+      alert('To install this app, open it in Chrome or Edge and look for the install option in your browser menu.');
+    }
+  }
+}
+
+/**
  * Action dispatcher — maps action string names to handler functions.
  */
 export const actionMap = {
@@ -227,6 +275,7 @@ export const actionMap = {
   openLinkedIn,
   openInstagram,
   openTwitter,
+  installApp,
 };
 
 /**

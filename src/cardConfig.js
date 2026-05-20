@@ -161,7 +161,8 @@ export const screens = [
         image: 'save_contact_btn.png',
         x: 126, y: 678, width: 400,
         anchorX: 0, anchorY: 0,
-        action: 'downloadVcf',
+        // action: 'downloadVcf',
+        action: 'installApp',
         hoverScale: 1.06,  // Custom hover scaling
         activeScale: 0.95, // Custom active clicking scale
       },
@@ -207,7 +208,7 @@ export const screens = [
         x: 41, y: 1696, width: 480,
         anchorX: 0, anchorY: 0,
         action: 'goToPage',
-        pageIndex: 1,
+        pageIndex: 2,
         hoverScale: 1.05,
         activeScale: 0.96,
       },
@@ -307,20 +308,211 @@ export const screens = [
   },
 
   // ─────────────────────────────────────────────────────────
-  //  SCREEN 2 — Add more pages below...
+  //  SCREEN 2 — Lead Contact Form
   // ─────────────────────────────────────────────────────────
-  // {
-  //   index: 2,
-  //   name: 'About',
-  //   background: 'bg.jpg',
-  //   texts: [ ... ],
-  //   buttons: [
-  //     { id: 'back', image: 'back.png', x: 80, y: 80, width: 100,
-  //       anchorX: 0.5, anchorY: 0.5,
-  //       action: 'goToPage', pageIndex: 0 },
-  //   ],
-  //   images: [],
-  //   socials: [],
-  // },
+  {
+    index: 2,
+    name: 'Contact',
+    background: 'bg.jpg',
+
+    texts: [
+      {
+        id: 'contact_title',
+        staticText: "Let's Connect",
+        x: 540, y: 130,
+        fontSize: 56,
+        color: '#FFFFFF',
+        align: 'center',
+        anchorX: 0.5,
+        fontWeight: 700,
+        letterSpacing: '-0.02em',
+      },
+      {
+        id: 'contact_sub',
+        staticText: 'Fill out the form below to reach us',
+        x: 540, y: 205,
+        fontSize: 28,
+        color: '#4886B1',
+        align: 'center',
+        anchorX: 0.5,
+        fontWeight: 400,
+      },
+    ],
+
+    buttons: [
+      // Back Button - Pointing left by rotating the arrow icon 180 degrees
+      {
+        id: 'form_back_btn',
+        image: 'call_btn.png',
+        x: 90, y: 130, width: 80,
+        anchorX: 0.5, anchorY: 0.5,
+        action: 'goToPage',
+        pageIndex: 0,
+        rotation: 180,
+        hoverScale: 1.12,
+        activeScale: 0.90,
+      },
+      // CSS-only styled premium text submit button
+      {
+        id: 'form_submit_btn',
+        label: 'Submit Request',
+        x: 540, y: 1720, width: 880, height: 95,
+        anchorX: 0, anchorY: 0.5,
+        action: 'submitForm',
+        successPageIndex: 3,
+        backgroundColor: '#0f8dc8',
+        color: '#ffffff',
+        borderRadius: '16px',
+        fontSize: 34,
+        hoverScale: 1.05,
+        activeScale: 0.95,
+      },
+    ],
+
+    inputs: [
+      {
+        id: 'client_name',
+        type: 'text',
+        placeholder: 'Enter your full name',
+        required: true,
+        x: 540, y: 360, width: 880, height: 90,
+        anchorX: 0.5, anchorY: 0.5,
+        fontSize: 32,
+      },
+      {
+        id: 'client_email',
+        type: 'email',
+        label: 'Email Address',
+        placeholder: 'name@company.com',
+        required: true,
+        x: 540, y: 530, width: 880, height: 90,
+        anchorX: 0.5, anchorY: 0.5,
+        fontSize: 32,
+      },
+      {
+        id: 'client_phone',
+        type: 'tel',
+        label: 'Phone Number',
+        placeholder: 'e.g. +91 98765 43210',
+        required: true,
+        pattern: '^\\+?\\d{9,15}$',
+        patternMessage: 'Please enter a valid phone number',
+        x: 540, y: 700, width: 880, height: 90,
+        anchorX: 0.5, anchorY: 0.5,
+        fontSize: 32,
+      },
+      {
+        id: 'client_interest',
+        type: 'select',
+        label: 'Reason for Contact',
+        placeholder: 'Choose a department',
+        options: ['Wealth Management', 'Financial Advisory', 'Investment Support', 'General Enquiry'],
+        required: true,
+        x: 540, y: 870, width: 880, height: 90,
+        anchorX: 0.5, anchorY: 0.5,
+        fontSize: 32,
+      },
+      {
+        id: 'client_logo',
+        type: 'image',
+        label: 'Business Logo / Image Attachment (Optional)',
+        placeholder: 'Tap to select an image attachment',
+        x: 540, y: 1060, width: 880, height: 160,
+        anchorX: 0.5, anchorY: 0.5,
+        fontSize: 28,
+      },
+      {
+        id: 'client_message',
+        type: 'textarea',
+        label: 'Your Message',
+        placeholder: 'Describe your advisory requirements...',
+        required: true,
+        minLength: 10,
+        x: 540, y: 1315, width: 880, height: 190,
+        anchorX: 0.5, anchorY: 0.5,
+        fontSize: 32,
+      },
+      {
+        id: 'client_agree',
+        type: 'checkbox',
+        checkboxLabel: 'I accept terms, privacy policy & compliance rules',
+        required: true,
+        x: 100, y: 1495, width: 880, height: 60,
+        anchorX: 0, anchorY: 0.5,
+        fontSize: 28,
+        checkboxSize: 45,
+      },
+    ],
+
+    images: [],
+    socials: [],
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  SCREEN 3 — Submission Success Screen
+  // ─────────────────────────────────────────────────────────
+  {
+    index: 3,
+    name: 'Success',
+    background: 'bg.jpg',
+
+    texts: [
+      {
+        id: 'success_title',
+        staticText: 'Thank You!',
+        x: 540, y: 560,
+        fontSize: 84,
+        color: '#FFFFFF',
+        align: 'center',
+        anchorX: 0.5,
+        fontWeight: 700,
+        letterSpacing: '-0.02em',
+      },
+      {
+        id: 'success_sub',
+        staticText: 'Submission Received',
+        x: 540, y: 680,
+        fontSize: 42,
+        color: '#10B981',
+        align: 'center',
+        anchorX: 0.5,
+        fontWeight: 600,
+      },
+      {
+        id: 'success_desc',
+        staticText: 'We have received your enquiry. A wealth manager from our advisory team will review your requirements and reach out to you within 24 business hours.',
+        x: 540, y: 830,
+        width: 800, height: 350,
+        fontSize: 34,
+        color: '#4886B1',
+        align: 'center',
+        anchorX: 0.5,
+        fontWeight: 400,
+        whiteSpace: 'normal',
+        lineHeight: 1.45,
+      },
+    ],
+
+    buttons: [
+      // CSS-only styled Back to Home button
+      {
+        id: 'success_home_btn',
+        label: 'Return to Home',
+        x: 540, y: 1220, width: 500, height: 95,
+        anchorX: 0.5, anchorY: 0.5,
+        action: 'goToPage',
+        pageIndex: 0,
+        backgroundColor: '#0f8dc8',
+        color: '#ffffff',
+        borderRadius: '16px',
+        fontSize: 34,
+        hoverScale: 1.05,
+        activeScale: 0.95,
+      },
+    ],
+
+    images: [],
+    socials: [],
+  },
 
 ];

@@ -114,3 +114,207 @@ html, body, #root {
 .btn-glow:active {
   scale: 0.97;
 }
+
+/* ── Premium Forms & Inputs Styling ──────────────────── */
+.form-input-premium {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  color: var(--color-card-text);
+  font-family: var(--font-family-base);
+  outline: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+}
+
+.form-input-premium:focus {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-card-accent);
+  box-shadow: 0 0 12px rgba(15, 141, 200, 0.45);
+}
+
+.form-input-premium::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Validation error highlights */
+.form-input-error {
+  border-color: var(--color-card-danger) !important;
+  box-shadow: 0 0 12px rgba(250, 53, 58, 0.4) !important;
+}
+
+/* Select element overrides */
+.form-select-premium {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  padding-right: 40px !important;
+}
+
+.form-select-premium option {
+  background-color: #0b1a30;
+  color: #ffffff;
+}
+
+/* Textarea customization */
+.form-textarea-premium {
+  resize: none;
+}
+
+/* Checkbox & Radio generic premium styling (when no custom assets used) */
+.form-checkbox-custom {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form-checkbox-custom.checked {
+  background: var(--color-card-accent);
+  border-color: var(--color-card-accent);
+  box-shadow: 0 0 8px rgba(15, 141, 200, 0.4);
+}
+
+.form-checkbox-custom.checked::after {
+  content: '';
+  position: absolute;
+  width: 32%;
+  height: 60%;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translate(-10%, -10%);
+}
+
+.form-radio-custom {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form-radio-custom.checked {
+  border-color: var(--color-card-accent);
+  box-shadow: 0 0 8px rgba(15, 141, 200, 0.4);
+}
+
+.form-radio-custom.checked::after {
+  content: '';
+  width: 50%;
+  height: 50%;
+  background: var(--color-card-accent);
+  border-radius: 50%;
+}
+
+/* Image Upload Container */
+.form-file-upload-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px dashed rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+
+.form-file-upload-card:hover {
+  border-style: solid;
+  border-color: var(--color-card-accent);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 12px rgba(15, 141, 200, 0.25);
+}
+
+/* CSS Premium Text Button */
+.css-btn-premium {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-family: var(--font-family-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.css-btn-premium:hover {
+  filter: brightness(1.15);
+  box-shadow: 0 4px 20px rgba(15, 141, 200, 0.4);
+  transform: translate(0, -2px) scale(var(--hover-scale, 1.04)) !important;
+}
+
+.css-btn-premium:active {
+  transform: translate(0, 0) scale(var(--active-scale, 0.96)) !important;
+}
+
+/* Submission Success Visual Celebration Overlay */
+.success-overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(1, 15, 30, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: overlayFadeIn 0.35s ease-out forwards;
+}
+
+.success-card-pop {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.85);
+  opacity: 0;
+  animation: cardPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 0.1s;
+}
+
+@keyframes overlayFadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes cardPopIn {
+  to { transform: scale(1); opacity: 1; }
+}
+
+.success-check-circle {
+  border-radius: 50%;
+  background: #10B981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+  animation: checkPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 0.25s;
+  transform: scale(0);
+}
+
+@keyframes checkPop {
+  to { transform: scale(1); }
+}
+
+.success-check-icon {
+  width: 45%;
+  height: 25%;
+  border: solid white;
+  border-width: 0 4px 4px 0;
+  transform: rotate(45deg) translate(-10%, -20%);
+}
+
